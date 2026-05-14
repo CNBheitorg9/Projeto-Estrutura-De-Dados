@@ -132,4 +132,130 @@ public class RedBlack_Router_Tree {
         }
         root.setColor(RBTNode.BLACK);
     }
+
+    private RBTNode minimun(RBTNode node) {
+        while (node.getLeft() != TNULL) {
+            node = node.getLeft();
+        }
+        return node;
+    }
+
+    public void delete(int id){
+        deleteNodeHelper(this.root, id);
+    }
+
+    private void deleteNodeHelper(RBTNode node, int id) {
+        RBTNode z = TNULL;
+        RBTNode x, y;
+        while(node != TNULL){
+            if(node.getRule().getId() == id){
+                z = node;
+            }
+            if(node.getRule().getId() <= id){
+                node = node.getRight();
+            } else {
+                node = node.getLeft();
+            }
+        }
+
+        if(z == TNULL){
+            return;
+        }
+
+        y = z;
+        int OriginalColor = y.getColor();
+        if(z.getLeft() == TNULL){
+            x = z.getRight();
+            rbTransplant(z, z.getRight());
+        } else if(z.getRight() == TNULL){
+            x = z.getLeft();
+            rbTransplant(z, z.getLeft());
+        } else {
+            y = minimun(z.getRight());
+            OriginalColor = y.getColor();
+            x = y.getRight();
+            if(y.getParent() == z){
+                x.setParent(y);
+            } else {
+                rbTransplant(y, y.getRight());
+                y.setRight(z.getRight());
+                y.getRight().setParent(y);
+            }
+
+            rbTransplant(z, y);
+            y.setLeft(z.getLeft());
+            y.getLeft().setParent(y);
+            y.setColor(z.getColor());
+        }
+        if(OriginalColor == RBTNode.BLACK){
+            fixDelete(x);
+        }
+    }
+
+    private void rbTransplant(RBTNode u, RBTNode v) {
+        if(u.getParent() == null){
+            root = v;
+        }else if (u == u.getParent().getLeft()) {
+            u.getParent().setLeft(v);
+        } else {
+            u.getParent().setRight(v);
+        }
+        v.setParent(u.getParent());
+    }
+
+    private void fixDelete(RBTNode x) {
+        RBTNode s;
+        while (x != root && x.getColor() == RBTNode.BLACK) {
+            if(x == x.getParent().getLeft()){
+                s = x.getParent().getRight();
+                if(s.getColor() == RBTNode.RED){
+                    s.setColor(RBTNode.BLACK);
+                    x.getParent().setColor(RBTNode.RED);
+                    leftRotate(x.getParent());
+                    s = x.getParent().getRight();
+                }
+                if(s.getLeft().getColor() == RBTNode.BLACK && s.getRight().getColor() == RBTNode.BLACK){
+                    s.setColor(RBTNode.RED);
+                    x = x.getParent();
+                } else {
+                    if(s.getRight().getColor() == RBTNode.BLACK){
+                        s.getLeft().setColor(RBTNode.BLACK);
+                        s.setColor(RBTNode.RED);
+                        rightRotate(s);
+                        s = x.getParent().getRight();
+                    }
+                    s.setColor(x.getParent().getColor());
+                    x.getParent().setColor(RBTNode.BLACK);
+                    s.getRight().setColor(RBTNode.BLACK);
+                    leftRotate(x.getParent());
+                    x = root;
+                }
+            } else {
+                s = x.getParent().getLeft();
+                if(s.getColor() == RBTNode.RED){
+                    s.setColor(RBTNode.BLACK);
+                    x.getParent().setColor(RBTNode.RED);
+                    rightRotate(x.getParent());
+                    s = x.getParent().getLeft();
+                }
+                if(s.getRight().getColor() == RBTNode.BLACK && s.getLeft().getColor() == RBTNode.BLACK){
+                    s.setColor(RBTNode.RED);
+                    x = x.getParent();
+                } else {
+                    if(s.getLeft().getColor() == RBTNode.BLACK){
+                        s.getRight().setColor(RBTNode.BLACK);
+                        s.setColor(RBTNode.RED);
+                        leftRotate(s);
+                        s = x.getParent().getLeft();
+                    }
+                    s.setColor(x.getParent().getColor());
+                    x.getParent().setColor(RBTNode.BLACK);
+                    x.getLeft().setColor(RBTNode.BLACK);
+                    rightRotate(x.getParent());
+                    x = root;
+                }
+            }
+        }
+        x.setColor(RBTNode.BLACK);
+    }
 }
