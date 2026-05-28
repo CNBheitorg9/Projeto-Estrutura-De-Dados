@@ -6,6 +6,8 @@ public class RedBlack_Router_Tree {
     public RedBlack_Router_Tree() {
         TNULL = new RBTNode(null);
         TNULL.setColor(RBTNode.BLACK);
+        TNULL.setLeft(TNULL);
+        TNULL.setRight(TNULL);
 
         root = TNULL;
     }
@@ -250,7 +252,7 @@ public class RedBlack_Router_Tree {
                     }
                     s.setColor(x.getParent().getColor());
                     x.getParent().setColor(RBTNode.BLACK);
-                    x.getLeft().setColor(RBTNode.BLACK);
+                    s.getLeft().setColor(RBTNode.BLACK);
                     rightRotate(x.getParent());
                     x = root;
                 }

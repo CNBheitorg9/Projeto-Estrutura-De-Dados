@@ -34,7 +34,7 @@ public class AVL_Router_Tree {
 
     private AVLNode leftRotate(AVLNode x) {
         AVLNode y = x.getRight();
-        AVLNode z = x.getLeft();
+        AVLNode z = y.getLeft();
 
         y.setLeft(x);
         x.setRight(z);
