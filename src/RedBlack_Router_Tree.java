@@ -260,4 +260,18 @@ public class RedBlack_Router_Tree {
         }
         x.setColor(RBTNode.BLACK);
     }
+    public boolean search(int id) {
+        RBTNode current = root;
+        while (current != TNULL) {
+            if (current.getRule().getId() == id) {
+                return true;
+            }
+            if (id < current.getRule().getId()) {
+                current = current.getLeft();
+            } else {
+                current = current.getRight();
+            }
+        }
+        return false;
+    }
 }

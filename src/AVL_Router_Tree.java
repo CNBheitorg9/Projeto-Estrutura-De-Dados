@@ -148,4 +148,22 @@ public class AVL_Router_Tree {
 
         return node;
     }
+    public void delete(int id) {
+        root = deleteNode(root, id);
+    }
+
+    public boolean search(int id) {
+        AVLNode current = root;
+        while (current != null) {
+            if (current.getRule().getId() == id) {
+                return true;
+            }
+            if (id < current.getRule().getId()) {
+                current = current.getLeft();
+            } else {
+                current = current.getRight();
+            }
+        }
+        return false;
+    }
 }
